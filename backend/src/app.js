@@ -5,9 +5,15 @@ const cors = require('cors')
 const app = express()
 
 app.use(cors({
-  origin: "https://ai-code-reviewer-xi-snowy.vercel.app",
-  credentials: true
-}));
+  origin: (origin, callback) => {
+    if (!origin || origin.endsWith("vercel.app")) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  }
+}))
+
 
 
 app.use(express.json())
