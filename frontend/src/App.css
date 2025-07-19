@@ -28,21 +28,33 @@ main .right {
 
 main .left {
   background-color: #000000;
-  position: relative;
+  position: relative; /* Keep relative for absolute positioning of review button */
+  display: flex; /* Make left a flex container */
+  flex-direction: column; /* Stack its children vertically */
 }
 
-.left .code,
-.code pre,
-.code pre code {
-  height: 100%;
+.left .code {
+  height: 100%; /* Take available height */
   width: 100%;
   margin: 0;
   border-radius: 0.7rem;
   background-color: #0c0c0c;
+  overflow-y: auto; /* Allow scrolling for code */
+  flex-grow: 1; /* Allow code area to grow */
+}
+
+.left .code pre,
+.left .code pre code { /* Corrected selector to target pre and code within .left .code */
+  height: 100%; /* These should also take available height */
+  width: 100%;
+  margin: 0;
+  border-radius: 0.7rem;
+  background-color: #0c0c0c;
+  /* Font size and line height will be adjusted in media query */
 }
 
 main .left .review {
-  position: absolute;
+  position: absolute; /* Keep absolute positioning relative to .left */
   bottom: 1rem;
   right: 1rem;
   background-color: rgb(219, 219, 255);
@@ -53,6 +65,7 @@ main .left .review {
   -webkit-user-select: none;
   user-select: none;
   border-radius: 0.7rem;
+  z-index: 10; /* Ensure button is above code */
 }
 
 
@@ -60,5 +73,55 @@ main .right {
   background-color: #343434;
   padding: 1rem 2rem;
   font-size: 1.5rem;
-  overflow: auto;
+  overflow: auto; /* Allow scrolling for review output */
+}
+
+
+@media screen and (max-width: 768px) {
+  main {
+    flex-direction: column; /* Stack left and right vertically */
+    padding: 1rem; /* Slightly less padding on mobile */
+    height: auto; /* Let content define height */
+    min-height: 100vh; /* Ensure it takes at least full viewport height */
+    overflow-y: auto; /* Allow scrolling for the entire main content */
+  }
+
+  main .left,
+  main .right {
+    width: 100%; /* Take full width */
+    height: auto; /* Let content define height */
+    min-height: 45vh; /* Give each section a minimum height */
+    flex-basis: auto; /* Reset flex-basis for column layout */
+  }
+
+  .left .code {
+    height: auto; /* Let content define height within min-height of parent */
+    min-height: 35vh; /* Ensure code area has a decent minimum height */
+    flex-grow: 1; /* Allow it to grow and fill space */
+  }
+
+  main .left .review {
+    position: static; /* Make it flow with content */
+    margin-top: 1rem; /* Add some space above it */
+    width: 100%; /* Make it full width */
+    text-align: center;
+    padding: 0.7rem 1rem; /* Adjust padding for mobile button */
+    font-size: 1.1rem; /* Adjust font size */
+    bottom: auto; /* Reset bottom */
+    right: auto; /* Reset right */
+  }
+
+  main .right {
+    font-size: 1rem;
+    padding: 1rem;
+    overflow-wrap: break-word;
+    min-height: 45vh; /* Ensure review area has a decent minimum height */
+    height: auto; /* Let content define height */
+  }
+
+  .code pre,
+  .code pre code {
+    font-size: 14px;
+    line-height: 1.4;
+  }
 }
